@@ -35,7 +35,6 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <time.h>
 
 #define LOG_TAG "QTI PowerHAL"
 #include <hardware/hardware.h>
@@ -132,38 +131,6 @@ static int resources_interaction_boost[] = {
 };
 // clang-format on
 
-const int kDefaultInteractiveDuration = 500; /* ms */
-const int kMaxInteractiveDuration = 5000;    /* ms */
-
-static void process_interaction_hint(void* data) {
-    static struct timespec s_previous_boost_timespec;
-
-    struct timespec cur_boost_timespec;
-    long long elapsed_time;
-    int duration = kDefaultInteractiveDuration;
-
-    if (data) {
-        int input_duration = *((int*)data);
-        if (input_duration > duration) {
-            duration = (input_duration > kMaxInteractiveDuration) ? kMaxInteractiveDuration
-                                                                  : input_duration;
-        }
-    }
-
-    clock_gettime(CLOCK_MONOTONIC, &cur_boost_timespec);
-
-    elapsed_time = calc_timespan_us(s_previous_boost_timespec, cur_boost_timespec);
-    // don't hint if it's been less than 250ms since last boost
-    // also detect if we're doing anything resembling a fling
-    // support additional boosting in case of flings
-    if (elapsed_time < 250000 && duration <= 750) {
-        return;
-    }
-    s_previous_boost_timespec = cur_boost_timespec;
-
-    interaction(duration, ARRAY_SIZE(resources_interaction_boost), resources_interaction_boost);
-}
-
 int power_hint_override(power_hint_t hint, void* data) {
     int ret_val = HINT_NONE;
     switch (hint) {
@@ -172,10 +139,6 @@ int power_hint_override(power_hint_t hint, void* data) {
             break;
         case POWER_HINT_VIDEO_DECODE:
             ret_val = process_video_decode_hint(data);
-            break;
-        case POWER_HINT_INTERACTION:
-            process_interaction_hint(data);
-            ret_val = HINT_HANDLED;
             break;
         default:
             break;
