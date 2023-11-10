@@ -35,6 +35,42 @@ ifneq ($(BOARD_POWER_CUSTOM_BOARD_LIB),)
 else
 
 # Include target-specific files.
+ifeq ($(call is-board-platform-in-list,msm8960), true)
+LOCAL_SRC_FILES += power-8960.c
+endif
+
+ifeq ($(call is-board-platform-in-list,msm8974), true)
+LOCAL_SRC_FILES += power-8974.c
+endif
+
+ifeq ($(call is-board-platform-in-list,msm8226), true)
+LOCAL_SRC_FILES += power-8226.c
+endif
+
+ifeq ($(call is-board-platform-in-list,msm8610), true)
+LOCAL_SRC_FILES += power-8610.c
+endif
+
+ifeq ($(call is-board-platform-in-list,apq8084), true)
+LOCAL_SRC_FILES += power-8084.c
+endif
+
+ifeq ($(call is-board-platform-in-list,msm8909), true)
+LOCAL_SRC_FILES += power-8909.c
+endif
+
+ifeq ($(call is-board-platform-in-list,msm8916), true)
+LOCAL_SRC_FILES += power-8916.c
+endif
+
+ifeq ($(call is-board-platform-in-list,msm8992), true)
+LOCAL_SRC_FILES += power-8992.c
+endif
+
+ifeq ($(call is-board-platform-in-list,msm8994), true)
+LOCAL_SRC_FILES += power-8994.c
+endif
+
 ifeq ($(call is-board-platform-in-list,msm8996), true)
 LOCAL_SRC_FILES += power-8996.c
 endif
@@ -43,11 +79,15 @@ ifeq ($(call is-board-platform-in-list,msm8937), true)
 LOCAL_SRC_FILES += power-8937.c
 endif
 
+ifeq ($(call is-board-platform-in-list,msm8952), true)
+LOCAL_SRC_FILES += power-8952.c
+endif
+
 ifeq ($(call is-board-platform-in-list,msm8953), true)
 LOCAL_SRC_FILES += power-8953.c
 endif
 
-ifeq ($(call is-board-platform-in-list,msm8998), true)
+ifeq ($(call is-board-platform-in-list,msm8998 apq8098_latv), true)
 LOCAL_SRC_FILES += power-8998.c
 endif
 
@@ -60,6 +100,10 @@ LOCAL_SRC_FILES += power-845.c
 endif
 
 endif # End of board specific list
+
+ifeq ($(call is-board-platform-in-list,qcs605), true)
+LOCAL_SRC_FILES += power-710.c
+endif
 
 ifneq ($(TARGET_POWERHAL_MODE_EXT),)
     LOCAL_CFLAGS += -DMODE_EXT
